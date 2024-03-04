@@ -17,15 +17,30 @@ export default function BuddyList() {
         </div>
       </div>
       <div className="window-body">
-        <Image
-          src='/aol_splash_image.png'
-          alt='AOL Splash Image'
-          width={0}
-          height={0}
-          sizes="100vw"
-          className={styles.splashimage}
-        />
-        Buddy list goes here
+        <div>
+          Controls go here
+        </div>
+        <div className={styles.bannerimage}>
+          <Image
+            src='/aol_splash_image.png'
+            alt='AOL Splash Image'
+            width={0}
+            height={0}
+            sizes="100vw"
+            className={styles.splashimage}
+          />
+        </div>
+        <div className={styles.buddylistcontainer}>
+          <ul className="tree-view">
+          <details open>
+            <summary>Buddies (X/X)</summary>
+            <ul>
+              <li>buddy 1</li>
+              <li>buddy 2</li>
+              </ul>
+            </details>
+          </ul>
+        </div>
       </div>
     </div>
   )
