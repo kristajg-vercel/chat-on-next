@@ -54,6 +54,9 @@ export default function ChatWindow({
             id='chat-input'
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") sendMessage()
+            }}
           />
           <div className={styles.chatcontrols}>
             <button onClick={sendMessage} className={styles.sendbutton}>
