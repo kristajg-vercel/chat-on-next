@@ -1,3 +1,49 @@
 .chatwindow {
   width: 500px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+}
+
+.chathistory {
+  display: block;
+  width: 100%;
+  background-color: white;
+  box-shadow:  -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
+  border-radius: 0;
+  box-sizing: border-box;
+  height: 180px;
+  padding: 3px 4px;
+  margin-bottom: 10px;
+
+  .yourusername {
+    font-weight: bold;
+    color: blue;
+  }
+  .buddyusername {
+    font-weight: bold;
+    color: red;
+  }
+}
+
+.chatinput {
+  display: block;
+  width: 100%;
+  resize: none;
+}
+
+.chatcontrols {
+  display: block;
+  height: 70px;
+  padding-top: 10px;
+}
+
+.sendbutton {
+  height: 65px;
+}
+
+.buttonicon {
+  width: 45px;
+  height: auto;
+  display: block;
 }
