@@ -1,6 +1,14 @@
 const http = require('http');
 const { Server } = require('socket.io');
 
+const seedData = require('./seedData.json');
+
+const randomizedMessageBack = function (buddyUserName) {
+  const buddyMessages = seedData.buddyList[buddyUserName].messages;
+  const randomizedIndex = Math.floor(Math.random() * buddyMessages.length) + 0;
+  return buddyMessages[randomizedIndex]
+}
+
 const httpServer = http.createServer((req, res) => {
   res.write('Server running!');
   res.end();
@@ -20,6 +28,9 @@ io.on('connection', (socket) => {
   socket.on('message', (message) => {
     console.log('message is: ', message);
     io.emit('message', message); // Broadcast the message to all connected clients
+    // randomize message back...
+    let randomMessage = randomizedMessageBack('beans4dinner2004');
+    io.emit('message', { user: 'beans4dinner2004', message: randomMessage });
   });
 
   socket.on('disconnect', () => {
