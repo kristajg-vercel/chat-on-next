@@ -1,17 +1,22 @@
 'use client';
 
+import io from 'socket.io-client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+
+const socket = io('http://localhost:3001');
+
 
 import styles from './chatWindowStyles.module.scss';
 
 export default function ChatWindow({
-  socket,
+  currentUser,
+  currentBuddy,
 }: {
-  socket: {}
+  currentUser: string,
+  currentBuddy: string,
 }) {
-  const [currentUser, setCurrentUser] = useState('kg_cooltimes_1337');
-  const [currentBuddy, setCurrentBuddy] = useState('beans4dinner2004');
+  // TODO: populate messages based on buddy
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
 
@@ -25,7 +30,7 @@ export default function ChatWindow({
 
   const sendMessage = () => {
     if (newMessage) {
-      socket.emit('message', { user: currentUser, message: newMessage });
+      socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
       setNewMessage('');
     }
   };

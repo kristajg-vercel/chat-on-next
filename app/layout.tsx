@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-// import "./globals.css";
 import "98.css";
-
-// const inter = Inter({ subsets: ["latin"] });
+import BuddyList from "./ui/buddyList";
 
 export const metadata: Metadata = {
   title: "Chat on Next.js",
@@ -17,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex item-center justify-between">
+        <h3>AIM Chat on Next.js</h3>
+        <BuddyList />
         {children}
       </body>
     </html>

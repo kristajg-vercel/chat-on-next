@@ -29,8 +29,9 @@ io.on('connection', (socket) => {
     console.log('message is: ', message);
     io.emit('message', message); // Broadcast the message to all connected clients
     // randomize message back...
-    let randomMessage = randomizedMessageBack('beans4dinner2004');
-    io.emit('message', { user: 'beans4dinner2004', message: randomMessage });
+    const { currentBuddy } = message;
+    let randomMessage = randomizedMessageBack(currentBuddy);
+    io.emit('message', { user: currentBuddy, message: randomMessage });
   });
 
   socket.on('disconnect', () => {

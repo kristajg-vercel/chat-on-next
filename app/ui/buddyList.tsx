@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { fetchBuddyList } from '../lib/data';
 import styles from './buddyListStyles.module.scss';
 
@@ -30,13 +32,15 @@ export default async function BuddyList() {
           />
         </div>
         <div className={styles.buddylistcontainer}>
-          <ul className="tree-view">
+          <ul className={`tree-view ${styles.buddyList}`}>
             <details open>
               <summary>Buddies ({data.totalOnline}/{data.buddies.length})</summary>
               <ul>
                 {data.buddies.map((data: { userName: string, isOnline: boolean }, index) => (
-                  <li key={index}>
-                    <span className={data.isOnline ? styles.onlineusername : ''}>{data.userName}</span>
+                  <li key={index} id={data.userName}>
+                    <Link href={`/${data.userName}`}>
+                      <span className={data.isOnline ? styles.onlineusername : ''}>{data.userName}</span>
+                    </Link>
                   </li>
                 ))}
               </ul>
