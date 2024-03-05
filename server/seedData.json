@@ -1,6 +1,7 @@
 {
   "buddyList": {
     "beans4dinner2004": {
+      "isOnline": true,
       "messages": [
         "Wazzup rofl",
         "im just a lonely loner. alone",
@@ -13,6 +14,7 @@
       ]
     },
     "xxXsparklekweenXxx": {
+      "isOnline": true,
       "messages": [
         "oh emm gee brb",
         "girl i know, AS IF",
@@ -22,6 +24,7 @@
       ]
     },
     "yourCrushTeehee": {
+      "isOnline": true,
       "messages": [
         "a/s/l?",
         "idk when ill be free",
@@ -31,6 +34,10 @@
         "oops meant to send that to someone else sry",
         "sorry g2g ttyl"
       ]
+    },
+    "sk8terGrl92": {
+      "isOnline": false,
+      "messages": []
     }
   }
 }

@@ -1,11 +1,10 @@
-// 'use client';
-
-// import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
+import { fetchBuddyList } from '../lib/data';
 import styles from './buddyListStyles.module.scss';
 
-export default function BuddyList() {
+export default async function BuddyList() {
+  let data = await fetchBuddyList();
+
   return (
     <div className={`window ${styles.buddywindow}`}>
       <div className="title-bar">
@@ -32,11 +31,14 @@ export default function BuddyList() {
         </div>
         <div className={styles.buddylistcontainer}>
           <ul className="tree-view">
-          <details open>
-            <summary>Buddies (X/X)</summary>
-            <ul>
-              <li>buddy 1</li>
-              <li>buddy 2</li>
+            <details open>
+              <summary>Buddies ({data.totalOnline}/{data.buddies.length})</summary>
+              <ul>
+                {data.buddies.map((data: { userName: string, isOnline: boolean }, index) => (
+                  <li key={index}>
+                    <span className={data.isOnline ? styles.onlineusername : ''}>{data.userName}</span>
+                  </li>
+                ))}
               </ul>
             </details>
           </ul>
