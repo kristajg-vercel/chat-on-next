@@ -3,9 +3,11 @@
 import io from 'socket.io-client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import useSound from 'use-sound';
+
+// import msg_in from '/msg_in.mp3';
 
 const socket = io('http://localhost:3001');
-
 
 import styles from './chatWindowStyles.module.scss';
 
@@ -16,19 +18,38 @@ export default function ChatWindow({
   currentUser: string,
   currentBuddy: string,
 }) {
+  const [playMsgIn] = useSound('/msg_in.mp3');
+  const [playMsgOut] = useSound('/msg_out.mp3');
+
   // TODO: populate messages based on buddy
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
+    let user = '';
     socket.on('message', message => {
-      console.log('message is: ', message);
+      // console.log('message is: ', message);
+      user = message.user;
       // @ts-ignore
       setMessages((prevMessages) => [...prevMessages, message]);
     });
+    playSound(user);
+    return () => {
+      socket.off('message')
+    }
   }, []);
 
-  const sendMessage = () => {
+  const playSound = (user: string) => {
+    if (user === 'kg_cooltimes_1337') {
+      console.log('uhh ')
+      playMsgOut();
+    } else {
+      playMsgIn();
+    }
+  }
+
+  const sendMessage = (e) => {
+    e.preventDefault();
     if (newMessage) {
       socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
       setNewMessage('');
@@ -60,10 +81,13 @@ export default function ChatWindow({
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") sendMessage()
+              if (e.key === "Enter") sendMessage(e)
             }}
           />
           <div className={styles.chatcontrols}>
+            <button onClick={playMsgOut}>
+              test
+            </button>
             <button onClick={sendMessage} className={styles.sendbutton}>
               <Image
                 src={newMessage ? '/aim_icon_enabled.png' : '/aim_icon_disabled.png'}
