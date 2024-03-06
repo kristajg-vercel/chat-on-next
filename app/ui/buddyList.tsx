@@ -10,7 +10,7 @@ export default async function BuddyList() {
   return (
     <div className={`window ${styles.buddywindow}`}>
       <div className="title-bar">
-        <div className="title-bar-text">Buddy List</div>
+        <div className="title-bar-text">{process.env.CURRENT_USER_NAME}'s Buddy List</div>
         <div className="title-bar-controls">
           <button aria-label="Minimize"></button>
           <button aria-label="Maximize"></button>

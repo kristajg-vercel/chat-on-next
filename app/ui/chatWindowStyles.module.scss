@@ -5,13 +5,13 @@
 }
 
 .chathistory {
-  display: block;
+  overflow-y: auto;
+  height: 180px;
   width: 100%;
   background-color: white;
   box-shadow:  -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
   border-radius: 0;
   box-sizing: border-box;
-  height: 180px;
   padding: 3px 4px;
   margin-bottom: 10px;
 
@@ -22,6 +22,10 @@
   .buddyusername {
     font-weight: bold;
     color: red;
+  }
+  .anchor {
+    display: block;
+    height: 1px;
   }
 }
 

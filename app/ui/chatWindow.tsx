@@ -1,7 +1,7 @@
 'use client';
 
 import io from 'socket.io-client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import useSound from 'use-sound';
 
@@ -16,18 +16,22 @@ export default function ChatWindow({
   currentUser: string,
   currentBuddy: string,
 }) {
+  const messagesEndRef = useRef(null);
+
   const [playMsgIn, msgInData] = useSound('/msg_in.mp3');
   const [playMsgOut, msgOutData] = useSound('/msg_out.mp3');
+  
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {  
     socket.on('message', message => {
-      if (msgInData.duration || msgOutData.duration) {
-        playSound(message.user);
-      }
+      // if (msgInData.duration || msgOutData.duration) {
+      //   playSound(message.user);
+      // }
       // @ts-ignore
       setMessages((prevMessages) => [...prevMessages, message]);
+      scrollChatToBottom();
     });
     return () => {
       socket.off('message')
@@ -35,15 +39,21 @@ export default function ChatWindow({
   }, [msgInData, msgOutData]);
 
   const playSound = (user: string) => {
-    // TODO: switch hardcoded with user logged in username
-    if (user === 'kg_cooltimes_1337') {
+    if (user === currentUser) {
       playMsgOut();
     } else {
       playMsgIn();
     }
   }
 
-  const sendMessage = (e) => {
+  const scrollChatToBottom = () => {
+    console.log('scrowl!')
+    window.requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    })
+  }
+
+  const sendMessage = (e: Event|MouseEvent) => {
     e.preventDefault();
     if (newMessage) {
       socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
@@ -54,7 +64,7 @@ export default function ChatWindow({
   return (
     <div className={`window ${styles.chatwindow}`}>
       <div className="title-bar">
-        <div className="title-bar-text">Chat with {currentBuddy}</div>
+        <div className="title-bar-text">Chat with {currentBuddy} - Instant Message</div>
         <div className="title-bar-controls">
           <button aria-label="Minimize"></button>
           <button aria-label="Maximize"></button>
@@ -67,7 +77,8 @@ export default function ChatWindow({
             <div key={index}>
               <span className={data.user === currentUser ? styles.yourusername : styles.buddyusername}>{data.user}:</span> {data.message}
             </div>
-          ))}
+          ))}            
+          <div className='anchor' ref={messagesEndRef} />
         </div>
         <div className='chat-controls'>
           <textarea
@@ -83,7 +94,10 @@ export default function ChatWindow({
             <button onClick={playMsgOut}>
               Sound Test
             </button>
-            <button onClick={sendMessage} className={styles.sendbutton}>
+            <button onClick={scrollChatToBottom}>
+              Scroll Test
+            </button>
+            <button onClick={e => sendMessage(e)} className={styles.sendbutton}>
               <Image
                 src={newMessage ? '/aim_icon_enabled.png' : '/aim_icon_disabled.png'}
                 alt='Send button'
