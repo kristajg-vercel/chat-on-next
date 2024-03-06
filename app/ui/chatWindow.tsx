@@ -5,8 +5,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import useSound from 'use-sound';
 
-// import msg_in from '/msg_in.mp3';
-
 const socket = io('http://localhost:3001');
 
 import styles from './chatWindowStyles.module.scss';
@@ -18,30 +16,27 @@ export default function ChatWindow({
   currentUser: string,
   currentBuddy: string,
 }) {
-  const [playMsgIn] = useSound('/msg_in.mp3');
-  const [playMsgOut] = useSound('/msg_out.mp3');
-
-  // TODO: populate messages based on buddy
+  const [playMsgIn, msgInData] = useSound('/msg_in.mp3');
+  const [playMsgOut, msgOutData] = useSound('/msg_out.mp3');
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
 
-  useEffect(() => {
-    let user = '';
+  useEffect(() => {  
     socket.on('message', message => {
-      // console.log('message is: ', message);
-      user = message.user;
+      if (msgInData.duration || msgOutData.duration) {
+        playSound(message.user);
+      }
       // @ts-ignore
       setMessages((prevMessages) => [...prevMessages, message]);
     });
-    playSound(user);
     return () => {
       socket.off('message')
     }
-  }, []);
+  }, [msgInData, msgOutData]);
 
   const playSound = (user: string) => {
+    // TODO: switch hardcoded with user logged in username
     if (user === 'kg_cooltimes_1337') {
-      console.log('uhh ')
       playMsgOut();
     } else {
       playMsgIn();
@@ -86,7 +81,7 @@ export default function ChatWindow({
           />
           <div className={styles.chatcontrols}>
             <button onClick={playMsgOut}>
-              test
+              Sound Test
             </button>
             <button onClick={sendMessage} className={styles.sendbutton}>
               <Image
