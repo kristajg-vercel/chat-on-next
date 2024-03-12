@@ -3,7 +3,7 @@
 import io from 'socket.io-client';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import useSound from 'use-sound';
+const useSound = require('use-sound');
 
 const socket = io('http://localhost:3001');
 
@@ -16,6 +16,7 @@ export default function ChatWindow({
   currentUser: string,
   currentBuddy: string,
 }) {
+  console.log('heyo type ', typeof useSound);
   const messagesEndRef = useRef(null);
 
   const [playMsgIn, msgInData] = useSound('/msg_in.mp3');
@@ -26,9 +27,9 @@ export default function ChatWindow({
 
   useEffect(() => {  
     socket.on('message', message => {
-      // if (msgInData.duration || msgOutData.duration) {
-      //   playSound(message.user);
-      // }
+      if (msgInData.duration || msgOutData.duration) {
+        playSound(message.user);
+      }
       // @ts-ignore
       setMessages((prevMessages) => [...prevMessages, message]);
       scrollChatToBottom();
@@ -49,6 +50,7 @@ export default function ChatWindow({
   const scrollChatToBottom = () => {
     console.log('scrowl!')
     window.requestAnimationFrame(() => {
+      // @ts-ignore
       messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
     })
   }
@@ -87,6 +89,7 @@ export default function ChatWindow({
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={(e) => {
+              // @ts-ignore
               if (e.key === "Enter") sendMessage(e)
             }}
           />
@@ -97,6 +100,7 @@ export default function ChatWindow({
             <button onClick={scrollChatToBottom}>
               Scroll Test
             </button>
+            {/* @ts-ignore */}
             <button onClick={e => sendMessage(e)} className={styles.sendbutton}>
               <Image
                 src={newMessage ? '/aim_icon_enabled.png' : '/aim_icon_disabled.png'}
