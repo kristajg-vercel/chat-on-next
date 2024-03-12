@@ -1,8 +1,12 @@
 import seedData from '../../server/seedData.json';
 
+interface BuddyData {
+  buddyList: any,
+}
+
 export async function fetchBuddyList() {
   // TODO: fetch buddy list from api / db
-  const { buddyList } = seedData;
+  const { buddyList }: BuddyData = seedData;
   let buddyArray = [];
   let totalOnline = 0;
   for (let key in buddyList) {
