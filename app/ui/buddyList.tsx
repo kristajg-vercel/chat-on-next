@@ -34,8 +34,10 @@ export default async function BuddyList() {
         <div className={styles.buddylistcontainer}>
           <ul className={`tree-view ${styles.buddyList}`}>
             <details open>
+              {/* @ts-ignore */}
               <summary>Buddies ({data.totalOnline}/{data.buddies.length})</summary>
               <ul>
+                {/* @ts-ignore */}
                 {data.buddies.map((data: { userName: string, isOnline: boolean }, index) => (
                   <li key={index} id={data.userName}>
                     <Link href={`/${data.userName}`}>
