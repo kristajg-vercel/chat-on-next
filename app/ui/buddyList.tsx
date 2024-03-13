@@ -5,7 +5,7 @@ import { fetchBuddyList } from '../lib/data';
 import styles from './buddyListStyles.module.scss';
 
 export default async function BuddyList() {
-  let data = await fetchBuddyList();
+  let data = await fetchBuddyList() || { totalOnline: 0, buddies: [] };
 
   return (
     <div className={`window ${styles.buddywindow}`}>

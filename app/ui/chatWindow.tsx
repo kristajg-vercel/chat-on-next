@@ -3,20 +3,23 @@
 import io from 'socket.io-client';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-const useSound = require('use-sound');
+// @ts-ignore
+import useSound from 'use-sound';
 
 const socket = io('http://localhost:3001');
 
+import { randomizedMessageBack, randomizeSleepTime } from '../lib/utils';
 import styles from './chatWindowStyles.module.scss';
 
 export default function ChatWindow({
   currentUser,
   currentBuddy,
+  chats,
 }: {
   currentUser: string,
   currentBuddy: string,
+  chats: Array<string>,
 }) {
-  console.log('heyo type ', typeof useSound);
   const messagesEndRef = useRef(null);
 
   const [playMsgIn, msgInData] = useSound('/msg_in.mp3');
@@ -25,19 +28,21 @@ export default function ChatWindow({
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
 
-  useEffect(() => {  
-    socket.on('message', message => {
-      if (msgInData.duration || msgOutData.duration) {
-        playSound(message.user);
-      }
-      // @ts-ignore
-      setMessages((prevMessages) => [...prevMessages, message]);
-      scrollChatToBottom();
-    });
-    return () => {
-      socket.off('message')
-    }
-  }, [msgInData, msgOutData]);
+  // useEffect(() => {
+  //   // socket.on('message', message => {
+  //     console.log('msgIn data.. ', msgInData);
+  //     if (msgInData.duration || msgOutData.duration) {
+  //       // playSound(message.user);
+  //     }
+  //     // @ts-ignore
+  //     // setMessages((prevMessages) => [...prevMessages, message]);
+  //     // scrollChatToBottom();
+  //   // });
+  //   // return () => {
+  //   //   socket.off('message')
+  //   // }
+  // }, []);
+
 
   const playSound = (user: string) => {
     if (user === currentUser) {
@@ -48,7 +53,6 @@ export default function ChatWindow({
   }
 
   const scrollChatToBottom = () => {
-    console.log('scrowl!')
     window.requestAnimationFrame(() => {
       // @ts-ignore
       messagesEndRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
@@ -58,7 +62,26 @@ export default function ChatWindow({
   const sendMessage = (e: Event|MouseEvent) => {
     e.preventDefault();
     if (newMessage) {
-      socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
+      // OLD
+      // socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
+
+      // 1st add the current user's message to the prevmessages & scroll to bottom
+      // @ts-ignore
+      setMessages((prevMessages) => [...prevMessages, { user: currentUser, message: newMessage }]);
+      playSound(currentUser);
+      scrollChatToBottom();
+
+      // 2nd randomize & then add the fake buddy's message to the prevmessages & scroll to bottom
+      const buddyMessage = randomizedMessageBack(chats);
+      const sleepTime = randomizeSleepTime();
+      setTimeout(() => {
+        // @ts-ignore
+        setMessages((prevMessages) => [...prevMessages, { user: currentBuddy, message: buddyMessage }]);
+        playSound(currentBuddy);
+        scrollChatToBottom();
+      }, sleepTime);
+
+      
       setNewMessage('');
     }
   };

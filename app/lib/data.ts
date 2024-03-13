@@ -1,26 +1,57 @@
-import seedData from '../../server/seedData.json';
+// import seedData from '../../server/seedData.json';
+import { kv } from '@vercel/kv';
 
-interface BuddyData {
-  buddyList: any,
-}
+// interface BuddyData {
+//   buddyList: any,
+// }
 
-export async function fetchBuddyList() {
-  // TODO: fetch buddy list from api / db
-  const { buddyList }: BuddyData = seedData;
-  let buddyArray = [];
-  let totalOnline = 0;
-  for (let key in buddyList) {
-    if (buddyList.hasOwnProperty(key)) {
-      buddyArray.push({ userName: key, isOnline: buddyList[key].isOnline });
-      if (buddyList[key].isOnline) ++totalOnline;
-    }
+// OLD WAY via json
+// export async function fetchBuddyList() {
+//   // TODO: fetch buddy list from api / db
+//   const { buddyList }: BuddyData = seedData;
+//   let buddyArray = [];
+//   let totalOnline = 0;
+//   for (let key in buddyList) {
+//     if (buddyList.hasOwnProperty(key)) {
+//       buddyArray.push({ userName: key, isOnline: buddyList[key].isOnline });
+//       if (buddyList[key].isOnline) ++totalOnline;
+//     }
+//   }
+//   return {
+//     buddies: buddyArray,
+//     totalOnline
+//   };
+// }
+
+export const fetchBuddyList = async () => {
+  try {
+    let buddyArray: { userName: string, isOnline: boolean }[] = [];
+    let totalOnline = 0;
+    const buddies = await kv.smembers('buddies');
+    await Promise.all(buddies.map(async userName => {
+      let data = await kv.hgetall(`buddy:${userName}`) || { isOnline: false };
+      let isOnline = !!data.isOnline;
+      if (isOnline) ++totalOnline;
+      buddyArray.push({ userName, isOnline });
+    }));
+    let sortedBuddies = buddyArray.sort((x, y) => {
+      return (x.isOnline === y.isOnline) ? 0 : x.isOnline ? -1 : 1;
+    });
+    return {
+      buddies: sortedBuddies,
+      totalOnline,
+    };
+  } catch (err) {
+    console.log('Fetch buddy list KV err ', err);
+    return {};
   }
-  return {
-    buddies: buddyArray,
-    totalOnline
-  };
 }
 
-// Needs to update in real time. Can use websockets or web hooks
-// This will also replace some of the temp logic in fetchBuddyList()
-// export async function currentlyOnline(buddies) {}
+export const fetchBuddyChats = async (userName: string) => {
+  try {
+    return await kv.smembers(userName);
+  } catch (err) {
+    console.log('Fetch chats KV err ', err);
+    return [];
+  }
+}
