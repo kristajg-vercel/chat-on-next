@@ -1,12 +1,9 @@
 'use client';
 
-import io from 'socket.io-client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 // @ts-ignore
 import useSound from 'use-sound';
-
-const socket = io('http://localhost:3001');
 
 import { randomizedMessageBack, randomizeSleepTime } from '../lib/utils';
 import styles from './chatWindowStyles.module.scss';
@@ -22,27 +19,11 @@ export default function ChatWindow({
 }) {
   const messagesEndRef = useRef(null);
 
-  const [playMsgIn, msgInData] = useSound('/msg_in.mp3');
-  const [playMsgOut, msgOutData] = useSound('/msg_out.mp3');
+  const [playMsgIn] = useSound('/msg_in.mp3');
+  const [playMsgOut] = useSound('/msg_out.mp3');
   
   const [messages, setMessages] = useState([]); // array of obj
   const [newMessage, setNewMessage] = useState('');
-
-  // useEffect(() => {
-  //   // socket.on('message', message => {
-  //     console.log('msgIn data.. ', msgInData);
-  //     if (msgInData.duration || msgOutData.duration) {
-  //       // playSound(message.user);
-  //     }
-  //     // @ts-ignore
-  //     // setMessages((prevMessages) => [...prevMessages, message]);
-  //     // scrollChatToBottom();
-  //   // });
-  //   // return () => {
-  //   //   socket.off('message')
-  //   // }
-  // }, []);
-
 
   const playSound = (user: string) => {
     if (user === currentUser) {
@@ -62,9 +43,6 @@ export default function ChatWindow({
   const sendMessage = (e: Event|MouseEvent) => {
     e.preventDefault();
     if (newMessage) {
-      // OLD
-      // socket.emit('message', { user: currentUser, currentBuddy, message: newMessage });
-
       // 1st add the current user's message to the prevmessages & scroll to bottom
       // @ts-ignore
       setMessages((prevMessages) => [...prevMessages, { user: currentUser, message: newMessage }]);

@@ -1,27 +1,4 @@
-// import seedData from '../../server/seedData.json';
 import { kv } from '@vercel/kv';
-
-// interface BuddyData {
-//   buddyList: any,
-// }
-
-// OLD WAY via json
-// export async function fetchBuddyList() {
-//   // TODO: fetch buddy list from api / db
-//   const { buddyList }: BuddyData = seedData;
-//   let buddyArray = [];
-//   let totalOnline = 0;
-//   for (let key in buddyList) {
-//     if (buddyList.hasOwnProperty(key)) {
-//       buddyArray.push({ userName: key, isOnline: buddyList[key].isOnline });
-//       if (buddyList[key].isOnline) ++totalOnline;
-//     }
-//   }
-//   return {
-//     buddies: buddyArray,
-//     totalOnline
-//   };
-// }
 
 export const fetchBuddyList = async () => {
   try {
