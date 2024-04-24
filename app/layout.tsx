@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { VercelToolbar } from '@vercel/toolbar/next';
 import "98.css";
 import BuddyList from "./ui/buddyList";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
         <BuddyList />
         {children}
       </body>
+      <VercelToolbar />
     </html>
   );
 }
