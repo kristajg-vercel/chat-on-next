@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex item-center justify-between">
-        <h3>AIM Chat on Next.js</h3>
+        <h3>AIM Chat on Next.js like Yesteryear</h3>
         <BuddyList />
         {children}
       </body>
